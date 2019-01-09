@@ -11,3 +11,52 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
 fi
 
 # Customize to your needs...
+#
+# History Search
+#
+
+# Binds up- and down arrow to search in the history for a line
+# beginning with the current line up to the cursor.
+# ZSH-Docu: "history-beginning-search-backward"
+
+bindkey "$terminfo[kcuu1]" history-beginning-search-backward
+bindkey "$terminfo[kcud1]" history-beginning-search-forward
+
+alias ecc="emacsclient -c -n --alternate-editor="""
+alias ec="emacsclient -n --alternate-editor="""
+
+alias lv="/usr/local/bin/gls -lv"
+
+alias t="true"
+
+export ERL_AFLAGS="-kernel shell_history enabled"
+export VAULT_ADDR=https://vault.vpp-tech.sonnen.cloud:8200
+
+export PATH=$PATH:/Users/jvf/Library/Python/2.7/bin/
+
+HISTSIZE=1000000
+SAVEHIST=1000000
+
+eval "$(fasd --init auto)"
+alias j='fasd_cd -d'
+alias e="sf -e 'emacsclient -n'" # open in spacemacs (same frame, spacemacs must be open)
+alias m="sf -e 'open -a macdown'" # open in macdown
+
+setopt INTERACTIVE_COMMENTS
+
+# Setup Ansible Integration into slack
+autoload -U add-zsh-hook # activate hooks
+SLACK_ANSIBLE_URL=https://hooks.slack.com/services/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
+. ~/Code/ansible/tools/post_to_slack.sh
+add-zsh-hook preexec ansible_slack # Add ansible_slack() to the preexec hook
+
+# for ansible
+export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES # see https://gitlab.sonnenbatterie.de/vpp/vpp/issues/191
+export ANSIBLE_HOST_KEY_CHECKING=False
+
+# Makes a directory and changes to it.
+function mcd {
+    [[ -n "$1" ]] && mkdir -p "$1" && builtin cd "$1"
+}
+
+unsetopt correct_all
